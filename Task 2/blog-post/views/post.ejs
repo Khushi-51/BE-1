@@ -1,18 +1,37 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= post.title %></title>
-    <link rel="stylesheet" href="/public/post.css">
+  <title><%= post.title %> - Modern Blog</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1><%= post.title %></h1>
-    <img src="/coding.png" alt="Coding Image" style="max-width: 40%; height: 40%;">
-    <p><%= post.content %></p>
+  <header class="header">
+    <div class="header-content">
+      <h1>Modern Blog</h1>
+      <a href="/create" class="create-btn">Create New Post</a>
+    </div>
+  </header>
 
-    <a href="/posts">← Back to all posts</a>
-    <script src="/public/main.js"></script>
+  <div class="container">
+    <a href="/" class="back-btn">← Back to Posts</a>
+    <div class="single-post">
+      <img src="https://source.unsplash.com/random/1200x600?sig=<%= post.id %>" alt="Post image" style="width: 100%; border-radius: 12px; margin-bottom: 30px;">
+      <p class="date"><%= new Date(post.date).toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }) %></p>
+      <h1 style="font-size: 2.5rem; margin-bottom: 20px;"><%= post.title %></h1>
+      <div class="content" style="line-height: 1.8; color: var(--secondary);">
+        <%= post.content %>
+      </div>
+    </div>
+  </div>
 
+  <footer class="footer">
+    <p>© 2024 Modern Blog. All rights reserved.</p>
+  </footer>
 </body>
 </html>

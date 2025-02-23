@@ -2,75 +2,54 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 5000;
-const postsFilePath = path.join(__dirname, 'posts.json');
+const PORT = 3000;
 
-
+// Middleware
+app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
+// Initialize posts.json if it doesn't exist
+const postsPath = path.join(__dirname, 'posts.json');
+if (!fs.existsSync(postsPath)) {
+  fs.writeFileSync(postsPath, JSON.stringify([]), 'utf8');
+}
 
-app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
-    next();
-});
-
-
-const readPosts = () => {
-    try {
-        const data = fs.readFileSync(postsFilePath);
-        return JSON.parse(data);
-    } catch (err) {
-        return [];
-    }
-};
-
-
-
-app.get('/posts', (req, res) => {
-    const posts = readPosts();
-    res.render('home', { posts });
+// Routes
+app.get('/', (req, res) => {
+  const posts = JSON.parse(fs.readFileSync(postsPath, 'utf8'));
+  res.render('home', { posts });
 });
 
 app.get('/post', (req, res) => {
-    const { id } = req.query;
-    const posts = readPosts();
-    const post = posts.find(p => p.id === parseInt(id));
-
-    if (post) {
-        res.render('post', { post });
-    } else {
-        res.status(404).send('Post not found');
-    }
+  const posts = JSON.parse(fs.readFileSync(postsPath, 'utf8'));
+  const post = posts.find(p => p.id === parseInt(req.query.id));
+  if (!post) return res.status(404).send('Post not found');
+  res.render('post', { post });
 });
 
+app.get('/create', (req, res) => {
+  res.render('addPost');
+});
 
 app.post('/add-post', (req, res) => {
-    const { title, content, image } = req.body;
-    if (!title || !content) {
-        return res.status(400).send('Title and content are required');
-    }
-
-    const posts = readPosts();
-    const newPost = { 
-        id: posts.length + 1, 
-        title, 
-        content, 
-        image: image && image.trim() !== '' ? image : '/public/images/default.jpg',
-        date: new Date().toLocaleString() 
-    };
-    posts.push(newPost);
-
-    fs.writeFileSync(postsFilePath, JSON.stringify(posts, null, 2));
-    res.redirect('/posts');
+  const posts = JSON.parse(fs.readFileSync(postsPath, 'utf8'));
+  const newPost = {
+    id: posts.length + 1,
+    title: req.body.title,
+    content: req.body.content,
+    date: new Date().toISOString()
+  };
+  posts.push(newPost);
+  fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2));
+  res.redirect('/');
 });
 
-
-app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
