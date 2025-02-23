@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to My Blog!",
+    "content": "This is the very first post on this blog. You can add more posts using the form!",
+    "image": "/welcome.png"
+  },
+  {
+    "id": 2,
+    "title": "Why I Love Coding",
+    "content": "Coding lets me create amazing things from scratch. It’s a blend of logic and creativity!",
+    "image": "/welcome.png"
+  },
+  {
+    "id": 3,
+    "title": "A Day in the Life of a Developer",
+    "content": "From writing code to debugging, every day brings new challenges and opportunities to learn.",
+    "image": "/developer.png"
+  },
+  {
+    "id": 4,
+    "title": "fgh",
+    "content": "vh yfty oisgedyf  usudw7e wekdhiu",
+    "date": "2025-02-23T18:17:30.378Z",
+    "excerpt": "vh yfty oisgedyf  usudw7e wekdhiu"
+  }
+]
